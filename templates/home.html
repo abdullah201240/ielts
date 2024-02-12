@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/css/bootstrap.min.css"
+        integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+    <title>Home</title>
+</head>
+
+<body>
+    {% load static %}
+
+    <nav class="navbar navbar-expand-lg navbar-dark p-3 bg-primary" id="headerNav">
+
+        <div class="container-fluid">
+            <a class="navbar-brand d-block d-lg-none" href="#">
+                <img src="{% static 'img/Colorful-removebg-preview.png'%}" height="80" />
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+                aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class=" collapse navbar-collapse" id="navbarNavDropdown">
+
+                <ul class="navbar-nav mx-auto ">
+                    <li class="nav-item">
+                        <a class="nav-link mx-2 active" aria-current="page" href="home">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mx-2" href="/history">History</a>
+                    </li>
+                    <li class="nav-item d-none d-lg-block">
+                        <a class="nav-link mx-2" href="#">
+                            <img src="{% static 'img/Colorful-removebg-preview.png'%}" height="100"  width="100"/>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mx-2" href="/profile">Profile</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mx-2" href="{% url 'logout' %}">Logout</a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-6">
+                <form action="" method="post" class="bg-light p-4 rounded">
+                    {% csrf_token %}
+                    <h1 class="text-center mb-4">Question</h1>
+                    <div class="mb-3">
+                        <input type="text" name="question" class="form-control" placeholder="Enter your question">
+                    </div>
+                    <h1 class="text-center mb-4">Answer</h1>
+                    <div class="mb-3">
+                        <textarea name="answer" class="form-control" rows="5"
+                            placeholder="Enter your answer"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block">Submit</button>
+                </form>
+            </div>
+            <div class="col-md-6 mt-3 mt-md-0 d-flex align-items-center justify-content-center">
+                <div>
+                    <h1 id="timer" class="text-center mb-4">00:00</h1>
+                    <button onclick="startTimer()" class="btn btn-primary btn-lg btn-block">Start 40-Minute
+                        Timer</button>
+                    <br> 
+                    {% if words %}
+                    <h3>{{ words}} Words              {{ paragraphs }} Paragraphs</h3>
+                    {% endif %}
+                    <br>
+
+
+
+
+
+                    {% if predicted_mark %}
+
+                    <center><h2 class="ml-4">{{ predicted_mark|floatformat:1 }}</h2>
+                    <h5>Overall Band Score</h5>
+                </center>
+
+                    {% endif %}
+
+                    {% if Coherence %}
+                    <h2>Coherence and Cohesion:{{Coherence|floatformat:1 }}</h2>
+
+
+                    {% endif %}
+
+
+
+
+
+
+
+
+                    {% if Structure %}
+                    {% if Structure == 'Yes' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span> Structure your answers in logical paragraphs
+                    </p>
+                    <p class="error">
+                        <span class="icon">&#10060;</span> One main idea per paragraph
+                    </p>
+                    
+                    {% elif Structure == 'No' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span> Structure your answers in logical paragraphs
+                    </p>
+                    <p class="error">
+                        <span class="icon">&#10060;</span> One main idea per paragraph
+                    </p>
+                    {% endif %}
+                    {% endif %}
+
+                    {% if Introduction %}
+                    {% if Introduction == 'Yes' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span> Include an introduction and conclusion
+                    </p>
+
+                    {% elif Introduction == 'No' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span> Include an introduction and conclusion
+                    </p>
+
+
+                    {% endif %}
+                    {% endif %}
+
+
+                    {% if Support %}
+                    {% if Support == 'Yes' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span> Support main points with an explanation and then an example
+                    </p>
+
+                    {% elif Support == 'No' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span> Support main points with an explanation and then an example
+                    </p>
+
+
+                    {% endif %}
+                    {% endif %}
+
+                    {% if Use %}
+                    {% if Use == 'Yes' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span>Use cohesive linking words accurately and appropriatel
+                    </p>
+
+                    {% elif Use == 'No' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span>Use cohesive linking words accurately and appropriatel
+                    </p>
+
+
+                    {% endif %}
+                    {% endif %}
+
+                    {% if Vary %}
+                    {% if Vary == 'Yes' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span> Vary your linking phrases using synonyms
+                    </p>
+
+                    {% elif Vary == 'No' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span> Vary your linking phrases using synonyms
+                    </p>
+
+
+                    {% endif %}
+                    {% endif %}
+
+                    <br>
+                    {% if Lexical_mark %}
+                    <h2>Lexical Resource:{{Lexical_mark|floatformat:1 }}</h2>
+
+
+                    {% endif %}
+
+
+                    {% if Try %}
+                    {% if Try == 'Yes' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span> Try to vary your vocabulary using accurate synonyms
+                    </p>
+                    <p class="error">
+                        <span class="icon">&#10060;</span> One main idea per paragraph
+                    </p>
+                    
+                    {% elif Try == 'No' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span> Try to vary your vocabulary using accurate synonyms
+                    </p>
+                    
+                    {% endif %}
+                    {% endif %}
+
+                    {% if Use_less %}
+                    {% if Use_less == 'YES' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span> Use less common question specific words that accurately convey meaning
+
+                    </p>
+                    
+                    
+                    {% elif Use_less == 'NO' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span> Use less common question specific words that accurately convey meaning
+
+                    </p>
+                    
+                    {% endif %}
+                    {% endif %}
+
+
+
+                    {% if Check %}
+                    {% if Check == 'YES' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span>Check your work for spelling and word formation mistakes
+
+                    </p>
+                    
+                    
+                    {% elif Check == 'NO' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span> Check your work for spelling and word formation mistakes
+
+                    </p>
+                    
+                    {% endif %}
+                    {% endif %}
+                    <br>
+                    {% if Grammatica_mark %}
+                    <h2>Grammatical Range :{{Grammatica_mark|floatformat:1 }}</h2>
+
+
+                    {% endif %}
+
+
+                    {% if Use_a %}
+                    {% if Use_a == 'YES' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span>Use a variety of complex and simple sentences
+
+                    </p>
+                    
+                    
+                    {% elif Use_a == 'NO' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span> Use a variety of complex and simple sentences
+
+                    </p>
+                    
+                    {% endif %}
+                    {% endif %}
+
+
+                    {% if Check_your %}
+                    {% if Check_your == 'YES' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span>Check your writing for errors
+
+                    </p>
+                    
+                    
+                    {% elif Check_your == 'NO' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span> Check your writing for errors
+
+                    </p>
+                    
+                    {% endif %}
+                    {% endif %}
+
+
+                    {% if Task_mark %}
+                    <h2>Task Achievement :{{Task_mark|floatformat:1 }}</h2>
+
+
+                    {% endif %}
+
+
+                    {% if Answer_all %}
+                    {% if Answer_all == 'YES' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span>Answer all parts of the question
+
+                    </p>
+                    
+                    
+                    {% elif Answer_all == 'NO' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span> Answer all parts of the question
+
+                    </p>
+                    
+                    {% endif %}
+                    {% endif %}
+
+                    {% if Present %}
+                    {% if Present == 'YES' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span>Present relevant ideas
+
+                    </p>
+                    
+                    
+                    {% elif Present == 'NO' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span> Present relevant ideas
+
+                    </p>
+                    
+                    {% endif %}
+                    {% endif %}
+
+                    {% if Fully %}
+                    {% if Fully == 'YES' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span>Fully explain these ideas
+
+                    </p>
+                    
+                    
+                    {% elif Fully == 'NO' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span> Fully explain these ideas
+
+                    </p>
+                    
+                    {% endif %}
+                    {% endif %}
+
+
+                    {% if specific_examples %}
+                    {% if specific_examples == 'YES' %}
+                    <p class="success">
+                        <span class="icon">&#10004;</span>Support ideas with relevant, specific examples
+
+                    </p>
+                    
+                    
+                    {% elif specific_examples == 'NO' %}
+                    <p class="error">
+                        <span class="icon">&#10060;</span> Support ideas with relevant, specific examples
+
+                    </p>
+                    
+                    {% endif %}
+                    {% endif %}
+
+
+
+
+                    
+
+
+
+                    
+
+
+<br><br><br><br>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <div
+        class="fixed-bottom d-flex flex-column flex-md-row text-center text-md-center justify-content-center py-4 px-4 px-xl-5 bg-primary">
+        <!-- Copyright -->
+        <div class="text-white mb-3 mb-md-0">
+            <div>
+                Copyright © 2023. All rights reserved.
+            </div>
+        </div>
+        <!-- Copyright -->
+    </div>
+    <script>
+        function startTimer() {
+            var timerElement = document.getElementById("timer");
+            var duration = 40 * 60; // 40 minutes in seconds
+
+            var timer = setInterval(function () {
+                var minutes = Math.floor(duration / 60);
+                var seconds = duration % 60;
+
+                var formattedTime = padZero(minutes) + ":" + padZero(seconds);
+
+                timerElement.textContent = formattedTime;
+
+                if (duration <= 0) {
+                    clearInterval(timer);
+                    timerElement.textContent = "Time's up!";
+                }
+
+                duration--;
+
+            }, 1000);
+        }
+
+        function padZero(num) {
+            return (num < 10 ? "0" : "") + num;
+        }
+    </script>
+
+
+
+    <style>
+        #timer {
+            font-size: 2rem;
+        }
+
+        @media screen and (min-width:992px) {
+            .nav-item {
+                line-height: 80px;
+            }
+        }
+    </style>
+    <style>
+        .success {
+            color: green;
+        }
+
+        .error {
+            color: red;
+        }
+
+        .icon {
+            font-size: 20px;
+            /* Adjust the size of the icon */
+            margin-right: 5px;
+        }
+    </style>
+
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"
+        integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.4.1/dist/js/bootstrap.min.js"
+        integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
